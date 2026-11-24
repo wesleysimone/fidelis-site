@@ -17,7 +17,7 @@ Campos vazios em `conteudo.mjs` aparecem no site como **"a definir"**. Nunca pre
 |---|---|
 | `site/` | o que vai no link: páginas geradas, `estilo.css` (tokens de design), `app.js`, `assets/`, `kit/` |
 | `scripts/` | conteúdo central e gerador das páginas |
-| `docs/` | documentos internos da Fase 0 — **não versionados neste repositório público** |
+| `plataforma/` | repositório **privado** `fidelis-plataforma` (backend + documentos internos) — não faz parte deste repositório público |
 | `material-cliente/` | arquivos originais do cliente (fora do Git) |
 
 ## Versão final

@@ -19,3 +19,6 @@ Imagens e logo/
 # Documentos internos (plano de negocio, precos em estudo, arquitetura): fora do repositorio PUBLICO.
 # Irao para o repositorio privado fidelis-plataforma.
 docs/
+
+# Repositorio privado da plataforma (git separado)
+plataforma/
