@@ -1,0 +1,13 @@
+{
+  "name": "fidelis-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "local": "node servidor/rodar-local.mjs site",
+    "testar-api": "node servidor/testar-api.mjs"
+  },
+  "devDependencies": {
+    "@php-wasm/node": "3.1.65",
+    "@php-wasm/universal": "3.1.65"
+  }
+}

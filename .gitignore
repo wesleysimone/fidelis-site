@@ -1,0 +1,17 @@
+# Material bruto do cliente (fotos, prints, documentos com dados pessoais)
+material-cliente/
+
+# Configurações e segredos locais
+.claude/
+.env
+.env.*
+servidor/config.php
+servidor/dados-local.db
+
+# Dependências e lixo do sistema
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Imagens originais geradas (referencia visual)
+Imagens e logo/
