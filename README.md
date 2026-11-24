@@ -1,33 +1,24 @@
-# FIDELIS — Contabilidade & Consultoria
+# FIDELIS — Contabilidade & Consultoria · protótipo do site
 
-Site institucional (protótipo para aprovação) com a barra amarela de sugestões e testes.
+Protótipo visual para aprovação (sem dados reais), com a barra amarela de sugestões e testes.
 
-- **Protótipo no ar:** https://wesleysimone.github.io/fidelis-site/
-- **Repositório:** https://github.com/wesleysimone/fidelis-site
-- **Versão atual:** 0.1.0 (ver `documentacao/ROTEIRO.md`)
+- **No ar:** https://wesleysimone.github.io/fidelis-site/
+- **Versão:** 0.2.0 (ver `CHANGELOG.md`)
 
-## Como rodar no computador
-```bash
-python -m http.server 5173 --directory site
-```
-Abra http://localhost:5173. Para testar a API de sugestões compartilhada: `npm install` e depois `npm run local`.
+## Como editar e ver no computador
+1. Edite o conteúdo em `scripts/conteudo.mjs` (dados da empresa, menu, serviços, ferramentas, dúvidas).
+2. Gere as páginas: `node scripts/gerar-site.mjs`
+3. Veja no navegador: `python -m http.server 5173 --directory site` → http://localhost:5173
+
+Campos vazios em `conteudo.mjs` aparecem no site como **"a definir"**. Nunca preencha com dados inventados.
 
 ## Pastas
 | Pasta | O que tem |
 |---|---|
-| `site/` | o que vai no link (HTML, `estilo.css`, `app.js`, `assets/` com logo tratado e ícones, `kit/` da barra de protótipo) |
-| `servidor/` | API PHP + MySQL das sugestões (vai para a hospedagem quando houver) |
-| `documentacao/` | análise, roteiro de versões e mensagens prontas |
+| `site/` | o que vai no link: páginas geradas, `estilo.css` (tokens de design), `app.js`, `assets/`, `kit/` |
+| `scripts/` | conteúdo central e gerador das páginas |
+| `docs/` | documentos internos da Fase 0 — **não versionados neste repositório público** |
 | `material-cliente/` | arquivos originais do cliente (fora do Git) |
 
-## Documentos
-- [Análise do cliente](documentacao/ANALISE.md)
-- [Roteiro de versões](documentacao/ROTEIRO.md)
-- [Mensagem para o cliente](documentacao/MENSAGEM-CLIENTE.md)
-- [Mensagem para o grupo de testes](documentacao/MENSAGEM-GRUPO-TESTES.md)
-
-## Dados fictícios
-WhatsApp, telefone, endereço, CNPJ e CRC são de exemplo e ficam em `site/app.js` (objeto `FIDELIS`) e no `site/index.html`. Trocar quando o cliente definir.
-
 ## Versão final
-Remover as tags do kit no fim do `index.html` e o `<meta name="robots" content="noindex">`.
+O protótipo será substituído pelo site da Fase 2 (FastAPI + Jinja2) no repositório privado da plataforma.

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solicitar proposta | FIDELIS – Contabilidade &amp; Consultoria</title>
+  <meta name="description" content="Solicite uma proposta à FIDELIS – Contabilidade &amp; Consultoria. Conte a sua necessidade e receba escopo e honorários por escrito.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://wesleysimone.github.io/fidelis-site/proposta/">
+  <meta name="theme-color" content="#081d30">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Solicitar proposta | FIDELIS – Contabilidade &amp; Consultoria">
+  <meta property="og:description" content="Solicite uma proposta à FIDELIS – Contabilidade &amp; Consultoria. Conte a sua necessidade e receba escopo e honorários por escrito.">
+  <meta property="og:image" content="https://wesleysimone.github.io/fidelis-site/assets/og-fidelis.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../estilo.css?v=0.2.0.mwv7lov6">
+  <link rel="stylesheet" href="../kit/kit.css?v=0.2.0.mwv7lov6">
+</head>
+<body data-pagina="Proposta">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topo">
+    <div class="topo-in">
+      <a class="marca" href="../" aria-label="FIDELIS — página inicial">
+        <img src="../assets/simbolo-dourado-160.png" alt="" width="34" height="37">
+        <span><b>FIDELIS</b><small>Contabilidade &amp; Consultoria</small></span>
+      </a>
+      <button class="menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+      <nav class="menu" id="menu" aria-label="Menu principal">
+        <a href="../">Início</a>
+        <a href="../sobre/">Sobre</a>
+        <a href="../servicos/">Serviços</a>
+        <a href="../espaco-mei/">Espaço MEI</a>
+        <a href="../fidelis-mei/">FIDELIS MEI</a>
+        <a href="../ferramentas/">Ferramentas</a>
+        <a href="../conteudos/">Conteúdos</a>
+        <a href="../contato/">Contato</a>
+        <a class="btn btn-peq btn-linha" href="../area-do-cliente/">Área do cliente</a>
+        <a class="btn btn-peq btn-ouro" href="../proposta/" aria-current="page">Solicitar proposta</a>
+        <a class="btn btn-peq btn-whats" aria-label="WhatsApp" href="../contato/" title="Número do WhatsApp a definir"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3z"/></svg><span>WhatsApp</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+
+    <section class="pg-topo">
+      <div class="pg-topo-in">
+        <p class="sobre-titulo">Solicitar proposta</p>
+        <h1>Conte um pouco sobre você</h1>
+        <p>Leva cerca de 1 minuto. Usamos estes dados somente para responder ao seu pedido.</p>
+      </div>
+    </section>
+    <section class="secao">
+      <form class="form" id="form-orc" novalidate>
+        <label>Seu nome<input id="f-nome" name="nome" autocomplete="name" placeholder="Como podemos te chamar?"></label>
+        <label>WhatsApp<input id="f-tel" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(61) 90000-0000"></label>
+        <label>Você é
+          <select id="f-tipo" name="tipo">
+            <option value="">Selecione</option>
+            <option value="sem-empresa">Ainda não tenho empresa</option>
+            <option value="mei">MEI</option>
+            <option value="empresa">Microempresa ou empresa de pequeno porte</option>
+            <option value="pf">Pessoa física</option>
+          </select>
+        </label>
+        <label>Assunto
+          <select id="f-servico" name="servico">
+            <option value="">Selecione</option>
+            <option value="mei">Serviços para o MEI</option>
+            <option value="empresas">Serviços empresariais</option>
+            <option value="imposto-de-renda">Imposto de Renda</option>
+            <option value="trabalhista">Departamento pessoal e área trabalhista</option>
+            <option value="fidelis-mei">Aplicativo FIDELIS MEI</option>
+            <option value="outro">Outro / ainda não sei</option>
+          </select>
+        </label>
+        <label class="larga">Mensagem (opcional)<textarea id="f-msg" name="msg" rows="3" placeholder="Ex.: sou MEI e meu faturamento está perto do limite"></textarea></label>
+        <label class="larga consent"><input type="checkbox" id="f-ok"> <span>Concordo que a FIDELIS use estes dados para responder ao meu pedido, conforme a <a href="../privacidade/">Política de privacidade</a>.</span></label>
+        <p class="form-erro larga" id="form-erro" role="alert"></p>
+        <button class="btn btn-ouro larga" id="form-enviar" type="submit">Enviar pedido</button>
+        <div class="previa larga" id="form-previa" hidden></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-in">
+      <div class="rod-col">
+        <div class="marca"><img src="../assets/simbolo-dourado-160.png" alt="" width="34" height="37"><span><b>FIDELIS</b><small>Contabilidade &amp; Consultoria</small></span></div>
+        <p class="rod-slogan">Confiança que gera futuro.</p>
+        <p>Brasília – DF</p>
+      </div>
+      <div class="rod-col">
+        <h2>Contato</h2>
+        <p>WhatsApp: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">número a definir</span></p>
+        <p>E-mail: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">e-mail a definir</span></p>
+        <p>Instagram: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">perfil a definir</span></p>
+      </div>
+      <div class="rod-col">
+        <h2>Institucional</h2>
+        <p><a href="../sobre/">Sobre a FIDELIS</a></p>
+        <p><a href="../privacidade/">Política de privacidade</a></p>
+        <p><a href="../termos/">Termos de uso</a></p>
+      </div>
+      <div class="rod-legal">
+        <p><span class="a-definir" title="Informação a ser fornecida pelo proprietário">Razão social a definir</span> · CNPJ <span class="a-definir" title="Informação a ser fornecida pelo proprietário"> a definir</span></p>
+        <p>Responsável técnico: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">nome a definir</span> · <span class="a-definir" title="Informação a ser fornecida pelo proprietário">CRC a definir</span></p>
+        <p class="aviso-prot">Protótipo para aprovação · conteúdo em revisão · v0.2.0</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../dados.js?v=0.2.0.mwv7lov6"></script>
+  <script src="../app.js?v=0.2.0.mwv7lov6"></script>
+
+  <!-- KIT PROTÓTIPO (remover na versão final) -->
+  <script src="../kit/kit-config.js?v=0.2.0.mwv7lov6"></script>
+  <script src="../kit/kit-core.js?v=0.2.0.mwv7lov6"></script>
+  <script src="../kit/kit-equipe.js?v=0.2.0.mwv7lov6"></script>
+  <script src="../kit/kit-sugestoes.js?v=0.2.0.mwv7lov6"></script>
+  <script src="../kit/kit-testes.js?v=0.2.0.mwv7lov6"></script>
+  <script src="../kit/kit-casos.js?v=0.2.0.mwv7lov6"></script>
+</body>
+</html>
