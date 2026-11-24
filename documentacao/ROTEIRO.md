@@ -2,7 +2,7 @@
 
 | versão | o que entrou | situação |
 |---|---|---|
-| 0.1.0 | Primeiro protótipo: site de uma página (abertura, pilares, 6 serviços, público, propósito, como funciona, orçamento pelo WhatsApp, dúvidas, contato com mapa/Como chegar/Waze). Símbolo dourado recortado do logo, ícones e imagem de compartilhamento. Barra de protótipo com 8 testes do site. | publicada · enviada para o cliente: ⏳ |
+| 0.1.0 | Primeiro protótipo: site de uma página (abertura, pilares, 6 serviços, público, propósito, como funciona, orçamento pelo WhatsApp, dúvidas, contato com mapa/Como chegar/Waze). Símbolo dourado recortado do logo, ícones e imagem de compartilhamento. Barra de protótipo com 8 testes do site. | publicada e conferida no ar (17/17) · enviada para o cliente: ⏳ |
 
 ## Pendente com o cliente
 Ver a lista completa em `ANALISE.md` › Decisões do cliente. Principais:
