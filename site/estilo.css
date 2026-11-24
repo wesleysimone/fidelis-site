@@ -250,3 +250,7 @@ main { padding-top: var(--topo-h); } /* o kit já reserva o espaço da barra ama
   .form { grid-template-columns: 1fr; }
   .hero-acoes .btn, .chamada .btn { width: 100%; }
 }
+
+.link-instalar { font-weight: 600; color: var(--ouro) !important; text-decoration: none; }
+/* App instalado (tela cheia): respeita a área do relógio/entalhe do celular */
+@media (display-mode: standalone) { body { padding-bottom: env(safe-area-inset-bottom); } }

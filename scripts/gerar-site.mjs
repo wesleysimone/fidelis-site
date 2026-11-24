@@ -53,6 +53,11 @@ function moldura(pg, corpo) {
   <meta name="robots" content="noindex">
   <link rel="canonical" href="${C.urlBase}${pg.caminho}">
   <meta name="theme-color" content="#081d30">
+  <link rel="manifest" href="${L('manifest.webmanifest')}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="FIDELIS">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/png" sizes="32x32" href="${L('assets/favicon-32.png')}">
   <link rel="apple-touch-icon" href="${L('assets/apple-touch-icon.png')}">
   <meta property="og:type" content="website">
@@ -104,6 +109,7 @@ ${corpo(L)}
         <p><a href="${L('sobre/')}">Sobre a FIDELIS</a></p>
         <p><a href="${L('privacidade/')}">Política de privacidade</a></p>
         <p><a href="${L('termos/')}">Termos de uso</a></p>
+        <p><a href="#" data-instalar class="link-instalar">📲 Instalar o app no celular</a></p>
       </div>
       <div class="rod-legal">
         <p>${E.razaoSocial ? esc(E.razaoSocial) : pend('Razão social')} · CNPJ ${ou(E.cnpj, '')}</p>
@@ -115,6 +121,7 @@ ${corpo(L)}
 ${E.whatsapp ? `  <a class="whats-flutuante js-whats" href="${zap('Olá! Vim pelo site da FIDELIS.')}" aria-label="Falar pelo WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3z"/></svg></a>\n` : ''}
   <script src="${L('dados.js')}?v=${CARIMBO}"></script>
   <script src="${L('app.js')}?v=${CARIMBO}"></script>
+  <script src="${L('kit/pwa.js')}?v=${CARIMBO}"></script>
 
   <!-- KIT PROTÓTIPO (remover na versão final) -->
   <script src="${L('kit/kit-config.js')}?v=${CARIMBO}"></script>
@@ -484,4 +491,45 @@ writeFileSync(join(RAIZ, 'dados.js'), `/* Gerado por scripts/gerar-site.mjs — 
 writeFileSync(join(RAIZ, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${paginas.map((p) => `  <url><loc>${C.urlBase}${p.caminho}</loc></url>`).join('\n')}\n</urlset>\n`);
 // Protótipo: bloqueia indexação. Na versão final trocar por "Allow: /" + Sitemap, e manter Disallow nas áreas privadas.
 writeFileSync(join(RAIZ, 'robots.txt'), `# Protótipo — não indexar\nUser-agent: *\nDisallow: /\n`);
+// App instalável (PWA): manifesto + service worker "rede primeiro".
+// O VERSION muda a cada geração → quem tem o app instalado recebe a versão nova sozinho.
+writeFileSync(join(RAIZ, 'manifest.webmanifest'), JSON.stringify({
+  name: E.nomeCompleto, short_name: 'FIDELIS', description: 'Contabilidade e consultoria: MEI, empresas, Imposto de Renda e área trabalhista.',
+  lang: 'pt-BR', start_url: './?origem=app', scope: './', display: 'standalone',
+  background_color: '#081d30', theme_color: '#081d30',
+  icons: [
+    { src: 'assets/icone-192.png', sizes: '192x192', type: 'image/png' },
+    { src: 'assets/icone-512.png', sizes: '512x512', type: 'image/png' },
+    { src: 'assets/icone-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+  ]
+}, null, 2));
+writeFileSync(join(RAIZ, 'sw.js'), `/* Gerado por scripts/gerar-site.mjs — não editar à mão.
+ * Rede primeiro, sem cache HTTP: com internet sempre mostra a versão mais nova (inclusive no app instalado);
+ * sem internet usa a última cópia. Só guarda arquivos públicos do site (nenhum dado de cliente). */
+const VERSION = '${CARIMBO}';
+const CACHE = 'fidelis-' + VERSION;
+const CORE = ['./', './estilo.css', './app.js', './dados.js', './manifest.webmanifest', './assets/simbolo-dourado.png', './assets/simbolo-dourado-160.png', './assets/icone-192.png'];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', (e) => {
+  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k.startsWith('fidelis-') && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  const escopo = new URL('./', self.location).href;
+  if (url.href.startsWith(escopo)) {
+    e.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .then((res) => { if (res.ok) { const c = res.clone(); caches.open(CACHE).then((k) => k.put(req, c)); } return res; })
+        .catch(() => caches.match(req, { ignoreSearch: true }).then((r) => r || (req.mode === 'navigate' ? caches.match('./') : undefined)))
+    );
+  } else if (url.hostname.endsWith('fonts.googleapis.com') || url.hostname.endsWith('fonts.gstatic.com')) {
+    e.respondWith(caches.match(req).then((r) => r || fetch(req).then((res) => { const c = res.clone(); caches.open(CACHE).then((k) => k.put(req, c)); return res; })));
+  }
+});
+`);
 console.log(`${paginas.length} páginas geradas (v${VERSAO}): ${paginas.map((p) => '/' + p.caminho).join('  ')}`);

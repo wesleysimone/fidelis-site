@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 — 24/11/2026 · app instalável
+- **Correção:** o site não era instalável. Faltavam o manifesto e o service worker, então o atalho no celular abria só como página comum e podia mostrar uma versão antiga por até 10 minutos (cache do GitHub Pages).
+- `manifest.webmanifest` (nome, ícones do emblema, tela cheia, azul-marinho) e `sw.js` "rede primeiro", gerados a cada publicação com versão nova. Quem tem o app instalado recebe a atualização sozinho, e a página recarrega.
+- O `kit/pwa.js` registra o `sw.js` da raiz em qualquer página (antes falhava em subpastas como `/servicos/mei/`).
+- Link "📲 Instalar o app no celular" no rodapé, com instruções para Android, iPhone e computador.
+
 ## 0.2.0 — 24/11/2026 · protótipo alinhado ao prompt mestre
 - O site passou a ter **16 páginas** com URLs amigáveis (`/servicos/mei/`, `/espaco-mei/`, `/fidelis-mei/` …), geradas a partir de `scripts/conteudo.mjs` com `scripts/gerar-site.mjs`.
 - Menu com os 10 itens do prompt; abertura com "Segurança para o seu negócio. Confiança para o seu futuro." e 3 botões; bloco "Do que você precisa?" com 8 opções.
