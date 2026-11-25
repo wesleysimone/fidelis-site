@@ -28,7 +28,7 @@ const ICONES = {
   link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
 };
 const icone = (n) => `<div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24">${ICONES[n] || ICONES.grafico}</svg></div>`;
-const selo = (s) => ({ consulta: '<span class="selo">Sob consulta</span>', futuro: '<span class="selo selo-futuro">Em breve</span>', 'em-breve': '<span class="selo selo-futuro">Em breve</span>', dev: '<span class="selo selo-futuro">Em desenvolvimento</span>' }[s] || '');
+const selo = (s) => ({ consulta: '<span class="selo">Sob consulta</span>', futuro: '<span class="selo selo-futuro">Em breve</span>', 'em-breve': '<span class="selo selo-futuro">Em breve</span>', dev: '<span class="selo selo-futuro">Em desenvolvimento</span>', teste: '<span class="selo selo-futuro">Em validação</span>' }[s] || '');
 
 /* ---------- moldura comum ---------- */
 function moldura(pg, corpo) {
@@ -122,7 +122,7 @@ ${E.whatsapp ? `  <a class="whats-flutuante js-whats" href="${zap('Olá! Vim pel
   <script src="${L('dados.js')}?v=${CARIMBO}"></script>
   <script src="${L('app.js')}?v=${CARIMBO}"></script>
   <script src="${L('kit/pwa.js')}?v=${CARIMBO}"></script>
-
+${(pg.scripts || []).map((x) => `  <script src="${L(x)}?v=${CARIMBO}"></script>\n`).join('')}
   <!-- KIT PROTÓTIPO (remover na versão final) -->
   <script src="${L('kit/kit-config.js')}?v=${CARIMBO}"></script>
   <script src="${L('kit/kit-core.js')}?v=${CARIMBO}"></script>
@@ -179,7 +179,14 @@ ${C.appRecursos.map(([t, d]) => `          <li><b>${esc(t)}</b><span>${esc(d)}</
 const blocoFerramentas = (L, titulo = true) => `
       ${titulo ? cab('Ferramentas gratuitas', 'Calculadoras e simuladores para o seu dia a dia', 'Sem cadastro. Cada cálculo vai mostrar a data de referência, as premissas e os limites da simulação.') : ''}
       <div class="cards cards-ferr">
-${C.ferramentas.map((f) => `        <article class="card card-ferr" id="${f.slug}">
+${C.ferramentas.map((f) => f.situacao === 'teste'
+  ? `        <a class="card card-ferr card-link" id="${f.slug}" href="${L('ferramentas/' + f.slug + '/')}">
+          ${icone('calc')}
+          <h3>${esc(f.nome)} ${selo(f.situacao)}</h3>
+          <p>${esc(f.desc)}</p>
+          <span class="mais">Testar agora →</span>
+        </a>`
+  : `        <article class="card card-ferr" id="${f.slug}">
           ${icone('calc')}
           <h3>${esc(f.nome)} ${selo(f.situacao)}</h3>
           <p>${esc(f.desc)}</p>
@@ -373,8 +380,8 @@ ${C.appRecursos.map(([t, d]) => `        <li><b>${esc(t)}</b><span>${esc(d)}</sp
 ${chamada(L, 'Quer ser avisado do lançamento?', 'Deixe o seu contato e avisamos quando o FIDELIS MEI estiver disponível.')}`);
 
 // FERRAMENTAS
-pagina('ferramentas/', 'Ferramentas', 'Ferramentas gratuitas', 'Ferramentas gratuitas da FIDELIS: simulador de limite do MEI, salário líquido, férias, rescisão e custo de contratação. Em breve.', (L) => `
-${topoPagina('Ferramentas gratuitas', 'Calculadoras e simuladores', 'Ferramentas sem cadastro, com regras oficiais, data de referência e explicação das premissas. Estão em validação e serão liberadas uma a uma.')}
+pagina('ferramentas/', 'Ferramentas', 'Ferramentas gratuitas', 'Ferramentas gratuitas da FIDELIS: simulador de limite do MEI, salário líquido, férias, rescisão e custo de contratação. Em validação.', (L) => `
+${topoPagina('Ferramentas gratuitas', 'Calculadoras e simuladores', 'Ferramentas sem cadastro, com regras oficiais, data de referência e explicação das premissas. Estão em validação: as tabelas ainda passam pela revisão do contador.')}
     <section class="secao">
 ${blocoFerramentas(L, false)}
     </section>
@@ -385,6 +392,93 @@ ${C.ferramentasFuturas.map((f) => `        <li>${esc(f)}</li>`).join('\n')}
       </ul>
       <p class="nota centro">Simulações não substituem a análise profissional. Para decisões importantes, fale com a FIDELIS.</p>
     </section>`);
+
+// FERRAMENTAS: uma página por ferramenta (o cálculo roda no navegador, igual ao da plataforma)
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const HOJE = new Date();
+const hojeISO = `${HOJE.getFullYear()}-${String(HOJE.getMonth() + 1).padStart(2, '0')}-${String(HOJE.getDate()).padStart(2, '0')}`;
+const FORMS = {
+  'limite-mei': `
+        <label>Ano<input id="l-ano" name="ano" type="number" min="2018" max="2100" value="${HOJE.getFullYear()}"></label>
+        <label>Data de abertura do MEI (opcional)<input id="l-abertura" name="data_abertura" type="date"></label>
+        <label>Faturamento no ano até agora (R$)<input id="l-valor" name="faturado_no_ano" inputmode="decimal" placeholder="Ex.: 45.000,00"></label>
+        <label>Até qual mês?
+          <select id="l-mes" name="mes_referencia">
+${MESES.map((m, i) => `            <option value="${i + 1}"${i === HOJE.getMonth() ? ' selected' : ''}>${m}</option>`).join('\n')}
+          </select>
+        </label>`,
+  'salario-liquido': `
+        <label>Salário bruto mensal (R$)<input id="t-salario" name="salario" inputmode="decimal" placeholder="Ex.: 3.500,00" required></label>
+        <label>Dependentes para o IR<input name="dependentes" type="number" min="0" max="20" value="0"></label>
+        <label>Outros valores tributáveis no mês (R$, opcional)<input name="outros_proventos" inputmode="decimal" placeholder="Ex.: horas extras"></label>
+        <label>Outros descontos (R$, opcional)<input name="outros_descontos" inputmode="decimal" placeholder="Ex.: vale-transporte"></label>`,
+  'calculadora-ferias': `
+        <label>Salário mensal (R$)<input id="t-salario" name="salario" inputmode="decimal" placeholder="Ex.: 3.000,00" required></label>
+        <label>Média de variáveis (R$, opcional)<input name="medias" inputmode="decimal" placeholder="Horas extras, comissões"></label>
+        <label>Faltas sem justificativa no período aquisitivo<input id="t-faltas" name="faltas" type="number" min="0" max="366" value="0"></label>
+        <label>Dependentes para o IR<input name="dependentes" type="number" min="0" max="20" value="0"></label>
+        <label class="consent larga"><input id="t-abono" name="abono" type="checkbox"> Vender 1/3 das férias (abono pecuniário)</label>`,
+  'custo-contratacao': `
+        <label>Salário do empregado (R$)<input id="t-salario" name="salario" inputmode="decimal" placeholder="Ex.: 2.000,00" required></label>
+        <label>Regime tributário da empresa
+          <select id="t-regime" name="regime">
+            <option value="mei">MEI</option>
+            <option value="simples" selected>Simples Nacional (Anexos I, II, III ou V)</option>
+            <option value="simples_anexo_iv">Simples Nacional (Anexo IV)</option>
+            <option value="lucro_presumido_real">Lucro Presumido ou Lucro Real</option>
+          </select>
+        </label>
+        <label>RAT/SAT (grau de risco da atividade)
+          <select name="rat"><option value="0.01">1% (leve)</option><option value="0.02" selected>2% (médio)</option><option value="0.03">3% (grave)</option></select>
+        </label>
+        <label>Benefícios por mês (R$, opcional)<input name="beneficios" inputmode="decimal" placeholder="Vale-transporte, alimentação"></label>`,
+  'calculadora-rescisao': `
+        <label>Último salário (R$)<input id="t-salario" name="salario" inputmode="decimal" placeholder="Ex.: 3.000,00" required></label>
+        <label>Tipo de desligamento
+          <select name="tipo" id="t-tipo">
+            <option value="sem_justa_causa">Dispensa sem justa causa</option>
+            <option value="pedido_demissao">Pedido de demissão</option>
+            <option value="acordo">Acordo entre as partes</option>
+            <option value="justa_causa">Dispensa por justa causa</option>
+          </select>
+        </label>
+        <label>Data de admissão<input id="t-admissao" name="admissao" type="date" required></label>
+        <label>Último dia de trabalho<input id="t-desligamento" name="desligamento" type="date" value="${hojeISO}" required></label>
+        <label>Aviso prévio
+          <select name="aviso" id="t-aviso">
+            <option value="indenizado" data-tipos="sem_justa_causa acordo">Indenizado (sem trabalhar)</option>
+            <option value="trabalhado" data-tipos="sem_justa_causa acordo pedido_demissao">Trabalhado</option>
+            <option value="nao_cumprido" data-tipos="pedido_demissao">Não cumprido pelo empregado</option>
+            <option value="dispensado" data-tipos="pedido_demissao justa_causa">Dispensado / não se aplica</option>
+          </select>
+        </label>
+        <label>Férias vencidas não tiradas
+          <select name="ferias_vencidas"><option value="0">Nenhuma</option><option value="1">1 período</option><option value="2">2 períodos</option></select>
+        </label>
+        <label>Saldo do FGTS para a multa (R$, opcional)<input id="t-fgts" name="saldo_fgts" inputmode="decimal" placeholder="Veja no app FGTS"></label>
+        <label>Dependentes para o IR<input name="dependentes" type="number" min="0" max="20" value="0"></label>`
+};
+const TEXTOS_FERR = {
+  'limite-mei': ['Veja quanto do limite anual você já usou e a projeção até dezembro. Sem cadastro.', 'mei', 'Precisa de uma análise detalhada?', 'A FIDELIS acompanha o seu faturamento e orienta antes de chegar ao limite.'],
+  'salario-liquido': ['Descontos de INSS e IRRF com a tabela vigente, já com a redução do Imposto de Renda de 2026. Sem cadastro.', 'trabalhista'],
+  'calculadora-ferias': ['Férias com o terço constitucional, abono pecuniário e descontos. Sem cadastro.', 'trabalhista'],
+  'custo-contratacao': ['Quanto um funcionário custa por mês além do salário, conforme o regime da empresa (MEI, Simples, Presumido ou Real).', 'trabalhista'],
+  'calculadora-rescisao': ['Estimativa das verbas rescisórias conforme o tipo de desligamento, com aviso prévio proporcional e multa do FGTS.', 'trabalhista']
+};
+for (const f of C.ferramentas.filter((x) => x.situacao === 'teste')) {
+  const [sub, interesse, chT, chX] = TEXTOS_FERR[f.slug];
+  pagina(`ferramentas/${f.slug}/`, 'Ferramentas', f.nome, `${f.nome}: ${f.desc} Ferramenta gratuita da FIDELIS (em validação).`, (L) => `
+${topoPagina('Ferramenta gratuita', f.nome, esc(sub))}
+    <section class="secao">
+      <form class="form" id="form-ferr" data-ferramenta="${f.slug}" data-proposta="${L('proposta/?interesse=' + interesse)}" novalidate>${FORMS[f.slug]}
+        <p class="form-erro larga" id="t-erro" role="alert"></p>
+        <button class="btn btn-ouro larga" type="submit" id="t-calcular">Calcular</button>
+      </form>
+      <div id="t-resultado" class="resultado-ferr" hidden aria-live="polite"></div>
+    </section>
+${chamada(L, chT || 'Tem funcionários ou vai contratar?', chX || 'A FIDELIS cuida do departamento pessoal da sua empresa, com folha, férias e rescisões calculadas e conferidas.')}`);
+  paginas[paginas.length - 1].scripts = ['calculos.js', 'ferramentas.js'];
+}
 
 // CONTEÚDOS
 pagina('conteudos/', 'Conteúdos', 'Conteúdos e orientações', 'Conteúdos e orientações da FIDELIS sobre MEI, abertura de empresas, obrigações fiscais, Imposto de Renda e departamento pessoal. Em preparação.', (L) => `

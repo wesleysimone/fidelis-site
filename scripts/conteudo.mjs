@@ -94,13 +94,13 @@ export const gruposServicos = [
   }
 ];
 
-/* Ferramentas (prompt 7). Nenhuma está liberada: só entram depois de validar as regras (Fase 4). */
+/* Ferramentas (prompt 7). Situação 'teste': funcionam no protótipo para conferência, com tabelas pendentes de revisão do contador. */
 export const ferramentas = [
-  { nome: 'Simulador de limite e faturamento do MEI', slug: 'limite-mei', situacao: 'em-breve', desc: 'Veja quanto do limite anual você já usou e a projeção até dezembro.' },
-  { nome: 'Calculadora de salário líquido', slug: 'salario-liquido', situacao: 'em-breve', desc: 'Descontos de INSS e IRRF com a tabela vigente e a data de referência.' },
-  { nome: 'Calculadora de férias', slug: 'calculadora-ferias', situacao: 'em-breve', desc: 'Valor das férias com o terço constitucional e os descontos.' },
-  { nome: 'Calculadora de rescisão trabalhista', slug: 'calculadora-rescisao', situacao: 'em-breve', desc: 'Estimativa das verbas rescisórias conforme o tipo de desligamento.' },
-  { nome: 'Custo de contratação de empregado', slug: 'custo-contratacao', situacao: 'em-breve', desc: 'Quanto um funcionário custa por mês, além do salário.' }
+  { nome: 'Simulador de limite e faturamento do MEI', slug: 'limite-mei', situacao: 'teste', desc: 'Veja quanto do limite anual você já usou e a projeção até dezembro.' },
+  { nome: 'Calculadora de salário líquido', slug: 'salario-liquido', situacao: 'teste', desc: 'Descontos de INSS e IRRF com a tabela vigente e a data de referência.' },
+  { nome: 'Calculadora de férias', slug: 'calculadora-ferias', situacao: 'teste', desc: 'Valor das férias com o terço constitucional e os descontos.' },
+  { nome: 'Calculadora de rescisão trabalhista', slug: 'calculadora-rescisao', situacao: 'teste', desc: 'Estimativa das verbas rescisórias conforme o tipo de desligamento.' },
+  { nome: 'Custo de contratação de empregado', slug: 'custo-contratacao', situacao: 'teste', desc: 'Quanto um funcionário custa por mês, além do salário.' }
 ];
 export const ferramentasFuturas = ['13º salário', 'Horas extras', 'Adicional noturno', 'IRRF', 'INSS', 'Pró-labore', 'CLT x PJ', 'Simples Nacional', 'Fator R', 'MEI x ME', 'Desenquadramento do MEI', 'IR do titular de MEI', 'Margem de lucro', 'Preço de venda', 'Ponto de equilíbrio'];
 

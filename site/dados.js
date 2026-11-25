@@ -53,6 +53,31 @@ window.FIDELIS = {
       "area": "Ferramentas"
     },
     {
+      "caminho": "ferramentas/limite-mei/",
+      "titulo": "Simulador de limite e faturamento do MEI",
+      "area": "Ferramentas"
+    },
+    {
+      "caminho": "ferramentas/salario-liquido/",
+      "titulo": "Calculadora de salário líquido",
+      "area": "Ferramentas"
+    },
+    {
+      "caminho": "ferramentas/calculadora-ferias/",
+      "titulo": "Calculadora de férias",
+      "area": "Ferramentas"
+    },
+    {
+      "caminho": "ferramentas/calculadora-rescisao/",
+      "titulo": "Calculadora de rescisão trabalhista",
+      "area": "Ferramentas"
+    },
+    {
+      "caminho": "ferramentas/custo-contratacao/",
+      "titulo": "Custo de contratação de empregado",
+      "area": "Ferramentas"
+    },
+    {
       "caminho": "conteudos/",
       "titulo": "Conteúdos e orientações",
       "area": "Conteúdos"

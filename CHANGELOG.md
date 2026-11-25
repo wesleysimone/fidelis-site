@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — 25/11/2026 · ferramentas gratuitas em validação
+- **5 ferramentas funcionando para teste:** limite do MEI, salário líquido, férias, rescisão e custo de contratação, cada uma na sua página (`/ferramentas/<nome>/`).
+- O cálculo roda no navegador (`calculos.js`) com as mesmas regras, textos e arredondamento da plataforma. Foram conferidos 9.500 casos aleatórios contra o cálculo do servidor, sem nenhuma diferença.
+- Tabelas de 2026 (INSS, IRRF com a redução da Lei 15.270/2025, salário mínimo, FGTS) e limites do MEI marcadas como **pendentes de revisão** do contador. Cada resultado mostra premissas, fontes e data de referência.
+- Barra de testes: 3 casos novos (páginas das ferramentas, valores conferidos à mão e formulário com cliques).
+
 ## 0.2.1 — 24/11/2026 · app instalável
 - **Correção:** o site não era instalável. Faltavam o manifesto e o service worker, então o atalho no celular abria só como página comum e podia mostrar uma versão antiga por até 10 minutos (cache do GitHub Pages).
 - `manifest.webmanifest` (nome, ícones do emblema, tela cheia, azul-marinho) e `sw.js` "rede primeiro", gerados a cada publicação com versão nova. Quem tem o app instalado recebe a atualização sozinho, e a página recarrega.

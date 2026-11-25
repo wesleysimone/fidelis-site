@@ -2,7 +2,7 @@
 window.KIT_CONFIG = {
   nome: 'FIDELIS Contabilidade & Consultoria',
   prefixo: 'fid',
-  versao: '0.2.1',
+  versao: '0.3.0',
   cor: '#081D30',
   responsavel: 'Wesley',
   adminLocal: 'wesley',
@@ -17,7 +17,8 @@ window.KIT_CONFIG = {
   funcionalidades: [
     [/proposta/i, 'Pedido de proposta'],
     [/whats/i, 'Contato pelo WhatsApp'],
-    [/dúvida/i, 'Dúvidas frequentes']
+    [/dúvida/i, 'Dúvidas frequentes'],
+    [/calcul|ferramenta|simulador/i, 'Ferramentas gratuitas']
   ],
 
   apiUrl: ''
