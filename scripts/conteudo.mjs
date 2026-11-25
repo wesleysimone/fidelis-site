@@ -100,9 +100,10 @@ export const ferramentas = [
   { nome: 'Calculadora de salário líquido', slug: 'salario-liquido', situacao: 'teste', desc: 'Descontos de INSS e IRRF com a tabela vigente e a data de referência.' },
   { nome: 'Calculadora de férias', slug: 'calculadora-ferias', situacao: 'teste', desc: 'Valor das férias com o terço constitucional e os descontos.' },
   { nome: 'Calculadora de rescisão trabalhista', slug: 'calculadora-rescisao', situacao: 'teste', desc: 'Estimativa das verbas rescisórias conforme o tipo de desligamento.' },
-  { nome: 'Custo de contratação de empregado', slug: 'custo-contratacao', situacao: 'teste', desc: 'Quanto um funcionário custa por mês, além do salário.' }
+  { nome: 'Custo de contratação de empregado', slug: 'custo-contratacao', situacao: 'teste', desc: 'Quanto um funcionário custa por mês, além do salário.' },
+  { nome: 'Simulação MEI x ME', slug: 'mei-x-me', situacao: 'teste', desc: 'Compare o custo de continuar MEI com o de virar ME no Simples Nacional.' }
 ];
-export const ferramentasFuturas = ['13º salário', 'Horas extras', 'Adicional noturno', 'IRRF', 'INSS', 'Pró-labore', 'CLT x PJ', 'Simples Nacional', 'Fator R', 'MEI x ME', 'Desenquadramento do MEI', 'IR do titular de MEI', 'Margem de lucro', 'Preço de venda', 'Ponto de equilíbrio'];
+export const ferramentasFuturas = ['13º salário', 'Horas extras', 'Adicional noturno', 'IRRF', 'INSS', 'Pró-labore', 'CLT x PJ', 'Simples Nacional', 'Fator R', 'Desenquadramento do MEI', 'IR do titular de MEI', 'Margem de lucro', 'Preço de venda', 'Ponto de equilíbrio'];
 
 /* FIDELIS MEI (prompt 5, 9, 10). Situação geral: em desenvolvimento. Preços NÃO aparecem (são estudo). */
 export const appRecursos = [

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulação MEI x ME | FIDELIS – Contabilidade &amp; Consultoria</title>
+  <meta name="description" content="Simulação MEI x ME: Compare o custo de continuar MEI com o de virar ME no Simples Nacional. Ferramenta gratuita da FIDELIS (em validação).">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://wesleysimone.github.io/fidelis-site/ferramentas/mei-x-me/">
+  <meta name="theme-color" content="#081d30">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="FIDELIS">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Simulação MEI x ME | FIDELIS – Contabilidade &amp; Consultoria">
+  <meta property="og:description" content="Simulação MEI x ME: Compare o custo de continuar MEI com o de virar ME no Simples Nacional. Ferramenta gratuita da FIDELIS (em validação).">
+  <meta property="og:image" content="https://wesleysimone.github.io/fidelis-site/assets/og-fidelis.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../estilo.css?v=0.3.1.mwvw0pgb">
+  <link rel="stylesheet" href="../../kit/kit.css?v=0.3.1.mwvw0pgb">
+</head>
+<body data-pagina="Ferramentas">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topo">
+    <div class="topo-in">
+      <a class="marca" href="../../" aria-label="FIDELIS — página inicial">
+        <img src="../../assets/simbolo-dourado-160.png" alt="" width="34" height="37">
+        <span><b>FIDELIS</b><small>Contabilidade &amp; Consultoria</small></span>
+      </a>
+      <button class="menu-btn" id="menu-btn" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+      <nav class="menu" id="menu" aria-label="Menu principal">
+        <a href="../../">Início</a>
+        <a href="../../sobre/">Sobre</a>
+        <a href="../../servicos/">Serviços</a>
+        <a href="../../espaco-mei/">Espaço MEI</a>
+        <a href="../../fidelis-mei/">FIDELIS MEI</a>
+        <a href="../../ferramentas/" aria-current="page">Ferramentas</a>
+        <a href="../../conteudos/">Conteúdos</a>
+        <a href="../../contato/">Contato</a>
+        <a class="btn btn-peq btn-linha" href="../../area-do-cliente/">Área do cliente</a>
+        <a class="btn btn-peq btn-ouro" href="../../proposta/">Solicitar proposta</a>
+        <a class="btn btn-peq btn-whats" aria-label="WhatsApp" href="../../contato/" title="Número do WhatsApp a definir"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3z"/></svg><span>WhatsApp</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+
+    <section class="pg-topo">
+      <div class="pg-topo-in">
+        <p class="sobre-titulo">Ferramenta gratuita</p>
+        <h1>Simulação MEI x ME</h1>
+        <p>Compare quanto custa por ano continuar MEI e quanto custaria uma microempresa no Simples Nacional. Sem cadastro.</p>
+      </div>
+    </section>
+    <section class="secao">
+      <form class="form" id="form-ferr" data-ferramenta="mei-x-me" data-proposta="../../proposta/?interesse=mei" novalidate>
+        <label>Faturamento previsto para 12 meses (R$)<input id="t-fat" name="faturamento_anual" inputmode="decimal" placeholder="Ex.: 120.000,00" required></label>
+        <label>Atividade principal
+          <select id="t-atividade" name="atividade"><option value="servicos">Serviços</option><option value="comercio">Comércio</option><option value="industria">Indústria</option></select>
+        </label>
+        <label>Pró-labore mensal na ME (R$, opcional)<input name="pro_labore" inputmode="decimal" placeholder="Se vazio, um salário mínimo"></label>
+        <label>Outros custos mensais da ME (R$, opcional)<input name="outros_custos_mensais" inputmode="decimal" placeholder="Ex.: contabilidade"></label>
+        <p class="form-erro larga" id="t-erro" role="alert"></p>
+        <button class="btn btn-ouro larga" type="submit" id="t-calcular">Calcular</button>
+      </form>
+      <div id="t-resultado" class="resultado-ferr" hidden aria-live="polite"></div>
+    </section>
+
+    <section class="secao chamada">
+      <div class="chamada-in">
+        <h2>Está perto de deixar de ser MEI?</h2>
+        <p>A FIDELIS analisa o seu caso e planeja a mudança para ME no momento certo, sem multas nem surpresas.</p>
+        <a class="btn btn-ouro" href="../../proposta/">Solicitar proposta</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-in">
+      <div class="rod-col">
+        <div class="marca"><img src="../../assets/simbolo-dourado-160.png" alt="" width="34" height="37"><span><b>FIDELIS</b><small>Contabilidade &amp; Consultoria</small></span></div>
+        <p class="rod-slogan">Confiança que gera futuro.</p>
+        <p>Brasília – DF</p>
+      </div>
+      <div class="rod-col">
+        <h2>Contato</h2>
+        <p>WhatsApp: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">número a definir</span></p>
+        <p>E-mail: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">e-mail a definir</span></p>
+        <p>Instagram: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">perfil a definir</span></p>
+      </div>
+      <div class="rod-col">
+        <h2>Institucional</h2>
+        <p><a href="../../sobre/">Sobre a FIDELIS</a></p>
+        <p><a href="../../privacidade/">Política de privacidade</a></p>
+        <p><a href="../../termos/">Termos de uso</a></p>
+        <p><a href="#" data-instalar class="link-instalar">📲 Instalar o app no celular</a></p>
+      </div>
+      <div class="rod-legal">
+        <p><span class="a-definir" title="Informação a ser fornecida pelo proprietário">Razão social a definir</span> · CNPJ <span class="a-definir" title="Informação a ser fornecida pelo proprietário"> a definir</span></p>
+        <p>Responsável técnico: <span class="a-definir" title="Informação a ser fornecida pelo proprietário">nome a definir</span> · <span class="a-definir" title="Informação a ser fornecida pelo proprietário">CRC a definir</span></p>
+        <p class="aviso-prot">Protótipo para aprovação · conteúdo em revisão · v0.3.1</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../dados.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../app.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../kit/pwa.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../calculos.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../ferramentas.js?v=0.3.1.mwvw0pgb"></script>
+
+  <!-- KIT PROTÓTIPO (remover na versão final) -->
+  <script src="../../kit/kit-config.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../kit/kit-core.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../kit/kit-equipe.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../kit/kit-sugestoes.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../kit/kit-testes.js?v=0.3.1.mwvw0pgb"></script>
+  <script src="../../kit/kit-casos.js?v=0.3.1.mwvw0pgb"></script>
+</body>
+</html>

@@ -50,6 +50,18 @@
       <p><b>${esc(s.mensagem)}</b></p>${p.orientacao ? `<p>${esc(p.orientacao)}</p>` : ''}`;
   }
 
+  function telaMxm(x) {
+    const dif = x.diferenca_anual == null ? null : Number(x.diferenca_anual), pct = (v) => (v == null ? '—' : String(v).replace('.', ',') + '%');
+    return x.avisos.map((a) => `<p class="aviso-dev">${esc(a)}</p>`).join('') +
+      `<h2>Resultado</h2>
+       <table class="tabela-res"><thead><tr><th>Custo por ano</th><th>MEI</th><th>ME (Simples)</th></tr></thead><tbody>
+         <tr><td>Imposto (DAS)</td><td>${brl(x.mei.anual)}<br><small>${brl(x.mei.das_mensal)} por mês</small></td><td>${x.me.simples_anual == null ? '—' : brl(x.me.simples_anual)}<br><small>alíquota efetiva ${pct(x.me.aliquota_efetiva)}</small></td></tr>
+         <tr><td>INSS do titular (pró-labore)</td><td>incluído no DAS</td><td>${brl(x.me.inss_pro_labore_anual)}</td></tr>
+         <tr><td>Outros custos informados</td><td>—</td><td>${brl(x.me.outros_custos_anual)}</td></tr>
+       </tbody><tfoot><tr><th>Total</th><th>${brl(x.mei.anual)}</th><th>${x.me.anual == null ? '—' : brl(x.me.anual)}</th></tr></tfoot></table>
+       ${dif == null ? '' : `<p class="res-num">${dif > 0 ? 'A ME custaria ' + brl(dif) + ' a mais por ano' : 'A ME custaria ' + brl(-dif) + ' a menos por ano'}</p>`}`;
+  }
+
   function telaTabela(d) {
     const custo = slug === 'custo-contratacao', x = d.extras;
     const linhas = d.linhas.filter((l) => l.tipo !== 'info');
@@ -81,7 +93,7 @@
     erro.textContent = ''; out.hidden = true;
     try {
       const d = window.FidelisCalc.calcular(slug, dados());
-      out.innerHTML = aviso + (slug === 'limite-mei' ? telaLimite(d) : telaTabela(d)) +
+      out.innerHTML = aviso + (slug === 'limite-mei' ? telaLimite(d) : slug === 'mei-x-me' ? telaMxm(d) : telaTabela(d)) +
         `<h3>Premissas</h3><ul>${d.premissas.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
          <p class="nota">Data de referência: ${dataBR(d.data_referencia)} · Fontes: ${d.fontes.map(esc).join('; ')}<br>${esc(d.limitacoes)}</p>
          <p><a class="btn btn-ouro" href="${form.dataset.proposta}">Quero uma análise da FIDELIS</a></p>`;

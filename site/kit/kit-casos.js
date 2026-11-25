@@ -14,13 +14,14 @@
     const s = document.createElement('script'); s.src = new URL('calculos.js', raiz()).href;
     s.onload = () => ok(window.FidelisCalc); s.onerror = () => falha(new Error('Não consegui carregar calculos.js')); document.head.appendChild(s);
   });
-  const FERR = ['limite-mei', 'salario-liquido', 'calculadora-ferias', 'calculadora-rescisao', 'custo-contratacao'];
+  const FERR = ['limite-mei', 'salario-liquido', 'calculadora-ferias', 'calculadora-rescisao', 'custo-contratacao', 'mei-x-me'];
   // exemplo de preenchimento por ferramenta (para o teste com cliques na própria página)
   const EXEMPLO = {
     'limite-mei': { '#l-valor': '45.000,00' },
     'salario-liquido': { '#t-salario': '8.000,00' },
     'calculadora-ferias': { '#t-salario': '3.000,00' },
     'custo-contratacao': { '#t-salario': '2.000,00' },
+    'mei-x-me': { '#t-fat': '120.000,00' },
     'calculadora-rescisao': { '#t-salario': '3.000,00', '#t-admissao': '2024-03-10', '#t-desligamento': '2026-11-20', '#t-fgts': '5000' }
   };
 
@@ -82,7 +83,7 @@
       h.ok(links.length >= 4, 'Esperava pelo menos 4 links oficiais');
       links.forEach((a) => h.ok(/\.gov\.br\//.test(a.href) && a.target === '_blank', `Link fora do padrão: ${a.href}`)); } },
 
-    { modulo: 'Ferramentas', nome: 'As 5 ferramentas abrem com formulário e aparecem na lista', async fn(h) {
+    { modulo: 'Ferramentas', nome: 'As 6 ferramentas abrem com formulário e aparecem na lista', async fn(h) {
       const lista = await buscar('ferramentas/');
       for (const f of FERR) {
         h.passo('Abrindo /ferramentas/' + f + '/');
@@ -114,6 +115,9 @@
       h.ok(/não se aplica/.test(erro), 'Justa causa com aviso indenizado deve ser recusada');
       const lim = v('limite-mei', { ano: 2026, faturado_no_ano: '45.000,00', mes_referencia: 6 });
       h.ok(lim.situacao.percentual === '55.56' && lim.projecao.projetado_ano === '90000.00', `Limite do MEI: esperava 55,56% e projeção 90.000 (deu ${lim.situacao.percentual}% e ${lim.projecao.projetado_ano})`);
+      const mx = v('mei-x-me', { faturamento_anual: '120.000,00', atividade: 'comercio' });
+      h.ok(mx.mei.anual === '984.60' && mx.me.simples_anual === '4800.00' && mx.diferenca_anual === '5955.12', `MEI x ME (comércio, 120 mil): esperava 984.60 / 4800.00 / 5955.12 (deu ${mx.mei.anual} / ${mx.me.simples_anual} / ${mx.diferenca_anual})`);
+      h.ok(v('mei-x-me', { faturamento_anual: '300000', atividade: 'servicos' }).me.aliquota_efetiva === '8.08', 'Serviços com 300 mil: alíquota efetiva de 8,08% (2ª faixa do Anexo III)');
       h.ok(sal.parametros_pendentes.length > 0, 'As tabelas devem aparecer como pendentes de revisão no protótipo'); } },
 
     { modulo: 'Ferramentas', nome: 'Formulário calcula e mostra o resultado na tela', async fn(h) {
@@ -131,7 +135,7 @@
       }
       await h.clicar('#t-calcular', 'Calcular');
       h.ok(!out.hidden && !h.texto('#t-erro'), `Esperava o resultado na tela (erro: ${h.texto('#t-erro') || 'nenhum'})`);
-      const esperado = { 'limite-mei': '55.56', 'salario-liquido': '6040.64', 'calculadora-ferias': '3631.40', 'custo-contratacao': '2580.00', 'calculadora-rescisao': '11529.04' }[slug];
+      const esperado = { 'limite-mei': '55.56', 'salario-liquido': '6040.64', 'calculadora-ferias': '3631.40', 'custo-contratacao': '2580.00', 'calculadora-rescisao': '11529.04', 'mei-x-me': '8307.12' }[slug];
       h.ok(out.dataset.liquido === esperado, `Esperava ${esperado} no resultado (deu ${out.dataset.liquido})`);
       h.ok(/Premissas/.test(out.textContent) && /Data de referência/.test(out.textContent), 'O resultado deve mostrar premissas e data de referência'); } },
 

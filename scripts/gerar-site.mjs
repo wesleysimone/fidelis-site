@@ -407,6 +407,13 @@ const FORMS = {
 ${MESES.map((m, i) => `            <option value="${i + 1}"${i === HOJE.getMonth() ? ' selected' : ''}>${m}</option>`).join('\n')}
           </select>
         </label>`,
+  'mei-x-me': `
+        <label>Faturamento previsto para 12 meses (R$)<input id="t-fat" name="faturamento_anual" inputmode="decimal" placeholder="Ex.: 120.000,00" required></label>
+        <label>Atividade principal
+          <select id="t-atividade" name="atividade"><option value="servicos">Serviços</option><option value="comercio">Comércio</option><option value="industria">Indústria</option></select>
+        </label>
+        <label>Pró-labore mensal na ME (R$, opcional)<input name="pro_labore" inputmode="decimal" placeholder="Se vazio, um salário mínimo"></label>
+        <label>Outros custos mensais da ME (R$, opcional)<input name="outros_custos_mensais" inputmode="decimal" placeholder="Ex.: contabilidade"></label>`,
   'salario-liquido': `
         <label>Salário bruto mensal (R$)<input id="t-salario" name="salario" inputmode="decimal" placeholder="Ex.: 3.500,00" required></label>
         <label>Dependentes para o IR<input name="dependentes" type="number" min="0" max="20" value="0"></label>
@@ -460,6 +467,7 @@ ${MESES.map((m, i) => `            <option value="${i + 1}"${i === HOJE.getMonth
 };
 const TEXTOS_FERR = {
   'limite-mei': ['Veja quanto do limite anual você já usou e a projeção até dezembro. Sem cadastro.', 'mei', 'Precisa de uma análise detalhada?', 'A FIDELIS acompanha o seu faturamento e orienta antes de chegar ao limite.'],
+  'mei-x-me': ['Compare quanto custa por ano continuar MEI e quanto custaria uma microempresa no Simples Nacional. Sem cadastro.', 'mei', 'Está perto de deixar de ser MEI?', 'A FIDELIS analisa o seu caso e planeja a mudança para ME no momento certo, sem multas nem surpresas.'],
   'salario-liquido': ['Descontos de INSS e IRRF com a tabela vigente, já com a redução do Imposto de Renda de 2026. Sem cadastro.', 'trabalhista'],
   'calculadora-ferias': ['Férias com o terço constitucional, abono pecuniário e descontos. Sem cadastro.', 'trabalhista'],
   'custo-contratacao': ['Quanto um funcionário custa por mês além do salário, conforme o regime da empresa (MEI, Simples, Presumido ou Real).', 'trabalhista'],

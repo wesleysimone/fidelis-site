@@ -78,6 +78,11 @@ window.FIDELIS = {
       "area": "Ferramentas"
     },
     {
+      "caminho": "ferramentas/mei-x-me/",
+      "titulo": "Simulação MEI x ME",
+      "area": "Ferramentas"
+    },
+    {
       "caminho": "conteudos/",
       "titulo": "Conteúdos e orientações",
       "area": "Conteúdos"

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 — 25/11/2026 · simulação MEI x ME
+- Nova ferramenta em validação: **Simulação MEI x ME** (`/ferramentas/mei-x-me/`), que compara o custo anual do MEI (DAS de 2026) com o de uma microempresa no Simples Nacional (Anexos I, II e III), mais o INSS do pró-labore.
+- Cálculo no navegador conferido contra o da plataforma em 3.000 casos aleatórios, sem diferença.
+- Barra de testes: os casos das ferramentas passaram a incluir a MEI x ME.
+
 ## 0.3.0 — 25/11/2026 · ferramentas gratuitas em validação
 - **5 ferramentas funcionando para teste:** limite do MEI, salário líquido, férias, rescisão e custo de contratação, cada uma na sua página (`/ferramentas/<nome>/`).
 - O cálculo roda no navegador (`calculos.js`) com as mesmas regras, textos e arredondamento da plataforma. Foram conferidos 9.500 casos aleatórios contra o cálculo do servidor, sem nenhuma diferença.

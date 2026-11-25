@@ -60,7 +60,19 @@
     'mei.limite_anual': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18-A, §§ 1º, 2º e 7º (conferir alterações posteriores)', valor: { valor: '81000.00' } },
     'mei.limite_mensal_proporcional': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18-A, §§ 1º, 2º e 7º (conferir alterações posteriores)', valor: { valor: '6750.00' } },
     'mei.tolerancia_excesso': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18-A, §§ 1º, 2º e 7º (conferir alterações posteriores)', valor: { percentual: '0.20' } },
-    'mei.faixas_alerta': { situacao: PENDENTE, fonte: 'Configuração interna FIDELIS (não normativa)', valor: { faixas: [50, 70, 80, 90, 100] } }
+    'mei.faixas_alerta': { situacao: PENDENTE, fonte: 'Configuração interna FIDELIS (não normativa)', valor: { faixas: [50, 70, 80, 90, 100] } },
+    'mei.das_valores': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18-A, § 3º, V (conferir valores de 2026 no Portal do Simples Nacional)',
+      valor: { inss_percentual_salario_minimo: '0.05', icms: '1.00', iss: '5.00' } },
+    'simples.anexo_i': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18 e Anexo I (redação da LC 155/2016)', valor: { faixas: [
+      { ate: '180000.00', aliquota: '0.04', deducao: '0' }, { ate: '360000.00', aliquota: '0.073', deducao: '5940.00' }, { ate: '720000.00', aliquota: '0.095', deducao: '13860.00' },
+      { ate: '1800000.00', aliquota: '0.107', deducao: '22500.00' }, { ate: '3600000.00', aliquota: '0.143', deducao: '87300.00' }, { ate: '4800000.00', aliquota: '0.19', deducao: '378000.00' }] } },
+    'simples.anexo_ii': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18 e Anexo II (redação da LC 155/2016)', valor: { faixas: [
+      { ate: '180000.00', aliquota: '0.045', deducao: '0' }, { ate: '360000.00', aliquota: '0.078', deducao: '5940.00' }, { ate: '720000.00', aliquota: '0.10', deducao: '13860.00' },
+      { ate: '1800000.00', aliquota: '0.112', deducao: '22500.00' }, { ate: '3600000.00', aliquota: '0.147', deducao: '85500.00' }, { ate: '4800000.00', aliquota: '0.30', deducao: '720000.00' }] } },
+    'simples.anexo_iii': { situacao: PENDENTE, fonte: 'LC 123/2006, art. 18 e Anexo III (redação da LC 155/2016)', valor: { faixas: [
+      { ate: '180000.00', aliquota: '0.06', deducao: '0' }, { ate: '360000.00', aliquota: '0.112', deducao: '9360.00' }, { ate: '720000.00', aliquota: '0.135', deducao: '17640.00' },
+      { ate: '1800000.00', aliquota: '0.16', deducao: '35640.00' }, { ate: '3600000.00', aliquota: '0.21', deducao: '125640.00' }, { ate: '4800000.00', aliquota: '0.33', deducao: '648000.00' }] } },
+    'trab.contribuinte_individual': { situacao: PENDENTE, fonte: 'Lei 8.212/1991, art. 21 e art. 30, § 4º (retenção de 11%)', valor: { aliquota_pro_labore: '0.11' } }
   };
   const MAPA = { salario_minimo: 'trab.salario_minimo', inss: 'trab.inss_empregado', irrf: 'trab.irrf_tabela', redutor: 'trab.irrf_reducao', fgts: 'trab.fgts', encargos: 'trab.encargos_patronais' };
   const pTrab = () => Object.fromEntries(Object.entries(MAPA).map(([k, c]) => [k, P[c].valor]));
@@ -286,6 +298,35 @@
     };
   }
 
+  // ------------------------------------------------------------ MEI x ME (Simples Nacional)
+  const ATIVIDADES = { comercio: ['Comércio', 'simples.anexo_i'], industria: ['Indústria', 'simples.anexo_ii'], servicos: ['Serviços (Anexo III)', 'simples.anexo_iii'] };
+  function meiXMe(fatAnual, atividade, { pro_labore = null, outros_custos_mensais = '0' } = {}) {
+    if (!ATIVIDADES[atividade]) throw new Error('Atividade inválida.');
+    const fat = q(fatAnual);
+    if (fat.cmp(0) <= 0) throw new Error('Informe o faturamento anual.');
+    const sm = q(P['trab.salario_minimo'].valor.valor), das = P['mei.das_valores'].valor;
+    const inssMei = din(sm.vezes(das.inss_percentual_salario_minimo));
+    const dasMensal = din(inssMei.mais(atividade === 'servicos' ? das.iss : das.icms)), meiAnual = din(dasMensal.vezes(12));
+    const meiOk = fat.cmp(P['mei.limite_anual'].valor.valor) <= 0;
+    const pl = pro_labore === null || pro_labore === '' ? sm : q(pro_labore), avisos = [];
+    if (pl.cmp(sm) < 0) avisos.push('O pró-labore não pode ser menor que o salário mínimo para fins de INSS; a simulação usa o valor informado.');
+    const inssPl = din(din(min(pl, P['trab.inss_empregado'].valor.teto).vezes(P['trab.contribuinte_individual'].valor.aliquota_pro_labore)).vezes(12));
+    const outros = din(q(outros_custos_mensais).vezes(12));
+    const fx = P[ATIVIDADES[atividade][1]].valor.faixas;
+    let faixa = null, nominal = null, efetiva = null, simples = null, me = null, dif = null;
+    if (fat.cmp(fx[fx.length - 1].ate) > 0) avisos.push('Faturamento acima do limite do Simples Nacional: a ME/EPP não pode optar pelo Simples. É preciso outra análise.');
+    else {
+      const i = fx.findIndex((f) => fat.cmp(f.ate) <= 0);
+      faixa = i + 1; nominal = q(fx[i].aliquota);
+      simples = din(max(fat.vezes(nominal).menos(fx[i].deducao), ZERO));
+      efetiva = simples.div(fat).vezes(100).arred(2);
+      me = din(simples.mais(inssPl).mais(outros)); dif = din(me.menos(meiAnual));
+    }
+    if (!meiOk) avisos.unshift('Com esse faturamento a empresa não pode ser MEI (passa do limite anual). O custo do MEI aparece só para comparação.');
+    return { mei_permitido: meiOk, das_mei_mensal: dasMensal, mei_anual: meiAnual, faixa, aliquota_nominal: nominal, aliquota_efetiva: efetiva, simples_anual: simples,
+      inss_pro_labore_anual: inssPl, outros_custos_anual: outros, me_anual: me, diferenca_anual: dif, avisos };
+  }
+
   // ------------------------------------------------------------ entrada no formato da API (mesmas validações)
   function dinheiro(v, obrig = false) {
     if (v === undefined || v === null || String(v).trim() === '') { if (obrig) throw new Error('Informe o salário.'); return '0.00'; }
@@ -354,6 +395,29 @@
         'Multa do FGTS (40%, ou 20% no acordo) sobre o saldo informado + o depósito do mês da rescisão.',
         'Não considera adiantamento do 13º, médias de horas extras e comissões, férias em dobro, estabilidades nem descontos de convênios.']);
     },
+    'mei-x-me'(d) {
+      const v = String(d.faturamento_anual || '').trim();
+      if (!v) throw new Error('Informe o faturamento previsto para 12 meses.');
+      let t = v.replace('R$', '').replace(/\s/g, ''); if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+      let fat; try { fat = q(t); } catch (e) { throw new Error('Valor inválido'); }
+      if (fat.cmp(0) <= 0 || fat.cmp('100000000') > 0) throw new Error('Valor fora da faixa');
+      const r = meiXMe(fat.txt(), d.atividade, { pro_labore: d.pro_labore ? dinheiro(d.pro_labore) : null, outros_custos_mensais: dinheiro(d.outros_custos_mensais) });
+      const s = (x) => (x === null ? null : x.txt()), sm = q(P['trab.salario_minimo'].valor.valor);
+      const chaves = ['trab.salario_minimo', 'mei.das_valores', 'mei.limite_anual', 'simples.anexo_i', 'simples.anexo_ii', 'simples.anexo_iii', 'trab.contribuinte_individual', 'trab.inss_empregado'];
+      return { data_referencia: iso(hoje()), atividade: ATIVIDADES[d.atividade][0],
+        mei: { permitido: r.mei_permitido, das_mensal: r.das_mei_mensal.txt(), anual: r.mei_anual.txt() },
+        me: { faixa: r.faixa, aliquota_nominal: s(r.aliquota_nominal), aliquota_efetiva: s(r.aliquota_efetiva), simples_anual: s(r.simples_anual),
+          inss_pro_labore_anual: r.inss_pro_labore_anual.txt(), outros_custos_anual: r.outros_custos_anual.txt(), anual: s(r.me_anual) },
+        diferenca_anual: s(r.diferenca_anual), avisos: r.avisos, liquido: s(r.diferenca_anual),
+        premissas: [
+          `MEI: DAS mensal de ${BR(r.das_mei_mensal)} (INSS de ${BR(sm.vezes(P['mei.das_valores'].valor.inss_percentual_salario_minimo))} + ICMS e/ou ISS fixos).`,
+          'ME no Simples Nacional: faturamento igual nos 12 meses (a receita dos últimos 12 meses é igual ao faturamento anual informado).',
+          'Imposto do Simples = faturamento × alíquota nominal − parcela a deduzir do anexo da atividade.',
+          'INSS do titular: 11% sobre o pró-labore (no mínimo um salário mínimo, se não informado), limitado ao teto.',
+          'Alguns serviços ficam no Anexo V ou dependem do Fator R; ICMS/ISS podem ter regras locais. Não inclui IRPF do titular nem distribuição de lucros.'],
+        fontes: [...new Set(chaves.map((c) => P[c].fonte))].sort(), parametros_pendentes: chaves.filter((c) => P[c].situacao !== 'revisado'),
+        limitacoes: 'Simulação informativa para comparar ordens de grandeza. A decisão de mudar de enquadramento precisa de análise profissional.' };
+    },
     'limite-mei'(d) {
       const v = String(d.faturado_no_ano || '').trim();
       if (!v) throw new Error('Informe o faturamento do ano até agora.');
@@ -364,6 +428,6 @@
   };
 
   const api = { calcular: (slug, dados) => { const f = FERRAMENTAS[slug]; if (!f) throw new Error('Ferramenta desconhecida.'); return f(dados || {}); },
-    _interno: { Q, inssEmpregado, irrfMensal, salarioLiquido, ferias, custoContratacao, rescisao, limiteMei, pTrab, D } };
+    _interno: { Q, inssEmpregado, irrfMensal, salarioLiquido, ferias, custoContratacao, rescisao, limiteMei, meiXMe, pTrab, D } };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else raiz.FidelisCalc = api;
 })(typeof window !== 'undefined' ? window : globalThis);
