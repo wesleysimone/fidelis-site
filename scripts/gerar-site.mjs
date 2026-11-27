@@ -41,7 +41,7 @@ function moldura(pg, corpo) {
     : `<a href="${L(m.href)}"${atual(m.href)}>${esc(m.rotulo)}</a>`).join('\n        ');
   const whatsTopo = E.whatsapp
     ? `<a class="btn btn-peq btn-whats js-whats" aria-label="WhatsApp" href="${zap('Olá! Vim pelo site da FIDELIS.')}"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3z"/></svg><span>WhatsApp</span></a>`
-    : `<a class="btn btn-peq btn-whats" aria-label="WhatsApp" href="${L('contato/')}" title="Número do WhatsApp a definir"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3z"/></svg><span>WhatsApp</span></a>`;
+    : `<a class="btn btn-peq btn-whats" aria-label="WhatsApp" href="${L('proposta/')}" title="Fale com a FIDELIS"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 2 6.7L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3z"/></svg><span>WhatsApp</span></a>`;
   const titulo = pg.caminho ? `${pg.titulo} | ${E.nomeCompleto}` : `${E.nomeCompleto} | ${E.cidade}`;
   return `<!doctype html>
 <html lang="pt-BR">
@@ -100,9 +100,10 @@ ${corpo(L)}
       </div>
       <div class="rod-col">
         <h2>Contato</h2>
-        <p>WhatsApp: ${E.whatsapp ? `<a class="js-whats" href="${zap('Olá! Vim pelo site da FIDELIS.')}">${esc(E.telefone || E.whatsapp)}</a>` : pend('número')}</p>
-        <p>E-mail: ${E.email ? `<a href="mailto:${esc(E.email)}">${esc(E.email)}</a>` : pend('e-mail')}</p>
-        <p>Instagram: ${E.instagram ? `<a href="https://instagram.com/${esc(E.instagram)}" target="_blank" rel="noopener">@${esc(E.instagram)}</a>` : pend('perfil')}</p>
+        ${E.whatsapp ? `<p>WhatsApp: <a class="js-whats" href="${zap('Olá! Vim pelo site da FIDELIS.')}">${esc(E.telefone || E.whatsapp)}</a></p>` : ''}
+        ${E.email ? `<p>E-mail: <a href="mailto:${esc(E.email)}">${esc(E.email)}</a></p>` : ''}
+        ${E.instagram ? `<p>Instagram: <a href="https://instagram.com/${esc(E.instagram)}" target="_blank" rel="noopener">@${esc(E.instagram)}</a></p>` : ''}
+        <p><a href="${L('proposta/')}">Fale com a FIDELIS pelo formulário</a></p>
       </div>
       <div class="rod-col">
         <h2>Institucional</h2>
@@ -112,8 +113,8 @@ ${corpo(L)}
         <p><a href="#" data-instalar class="link-instalar">📲 Instalar o app no celular</a></p>
       </div>
       <div class="rod-legal">
-        <p>${E.razaoSocial ? esc(E.razaoSocial) : pend('Razão social')} · CNPJ ${ou(E.cnpj, '')}</p>
-        <p>Responsável técnico: ${ou(E.responsavel, 'nome')} · ${E.crc ? esc(E.crc) : pend('CRC')}</p>
+        ${E.razaoSocial || E.cnpj ? `<p>${[E.razaoSocial && esc(E.razaoSocial), E.cnpj && 'CNPJ ' + esc(E.cnpj)].filter(Boolean).join(' · ')}</p>` : ''}
+        ${E.responsavel ? `<p>Responsável técnico: ${esc(E.responsavel)}${E.crc ? ' · ' + esc(E.crc) : ''}</p>` : ''}
         <p class="aviso-prot">Protótipo para aprovação · conteúdo em revisão · v${VERSAO}</p>
       </div>
     </div>
@@ -277,10 +278,8 @@ ${topoPagina('Sobre a FIDELIS', 'Fiel, leal e digno de confiança', 'Fidelis é 
         <div class="prop-txt">
           <h2>Propósito</h2>
           <p>Ser um escritório de contabilidade tecnologicamente organizado, que usa ferramentas próprias para atender melhor, orientar com clareza e ajudar empreendedores a crescer com segurança.</p>
-          <h2>Nossa história</h2>
-          <p>${pend('Texto da história da empresa')}</p>
-          <h2>Responsável técnico</h2>
-          <p>${ou(E.responsavel, 'Nome do contador')} · ${E.crc ? esc(E.crc) : pend('Registro no CRC')}</p>
+          ${E.responsavel ? `<h2>Responsável técnico</h2>
+          <p>${esc(E.responsavel)}${E.crc ? ' · ' + esc(E.crc) : ''}</p>` : ''}
         </div>
         <ul class="simbolos">
           <li><b>Cruz</b><span>A fé como base de todos os valores.</span></li>
@@ -551,11 +550,11 @@ ${topoPagina('Contato', 'Fale com a FIDELIS', '')}
     <section class="secao">
       <div class="contato-in">
         <div class="contato-info">
-          <div class="bloco"><h2>WhatsApp</h2><p>${E.whatsapp ? `<a class="btn btn-marinho js-whats" href="${zap('Olá! Vim pelo site da FIDELIS.')}">Conversar pelo WhatsApp</a>` : pend('Número')}</p></div>
-          <div class="bloco"><h2>E-mail</h2><p>${E.email ? `<a href="mailto:${esc(E.email)}">${esc(E.email)}</a>` : pend('E-mail')}</p></div>
-          <div class="bloco"><h2>Atendimento</h2><p>${E.horario ? esc(E.horario) : pend('Horário')}</p></div>
+          ${E.whatsapp ? `<div class="bloco"><h2>WhatsApp</h2><p><a class="btn btn-marinho js-whats" href="${zap('Olá! Vim pelo site da FIDELIS.')}">Conversar pelo WhatsApp</a></p></div>` : ''}
+          ${E.email ? `<div class="bloco"><h2>E-mail</h2><p><a href="mailto:${esc(E.email)}">${esc(E.email)}</a></p></div>` : ''}
+          ${E.horario ? `<div class="bloco"><h2>Atendimento</h2><p>${esc(E.horario)}</p></div>` : ''}
           <div class="bloco"><h2>Localização</h2><p>${esc(E.cidade)}${E.endereco ? `<br>${esc(E.endereco)}` : ''}</p>
-            ${E.endereco ? `<div class="acoes-mapa"><a class="btn btn-marinho btn-peq" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(E.endereco)}">Como chegar</a> <a class="btn btn-linha-escura btn-peq" target="_blank" rel="noopener" href="https://waze.com/ul?q=${encodeURIComponent(E.endereco)}&navigate=yes">Abrir no Waze</a></div>` : `<p class="nota">${pend('Endereço físico (ou atendimento só online)')}</p>`}
+            ${E.endereco ? `<div class="acoes-mapa"><a class="btn btn-marinho btn-peq" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(E.endereco)}">Como chegar</a> <a class="btn btn-linha-escura btn-peq" target="_blank" rel="noopener" href="https://waze.com/ul?q=${encodeURIComponent(E.endereco)}&navigate=yes">Abrir no Waze</a></div>` : ''}
           </div>
         </div>
         <div class="card contato-cta">

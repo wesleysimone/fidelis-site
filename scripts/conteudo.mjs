@@ -16,7 +16,7 @@ export const empresa = {
   instagram: '',         // usuário sem @
   endereco: '',          // vazio = sem endereço físico divulgado
   cnpj: '',
-  razaoSocial: '',
+  razaoSocial: 'FIDELIS – Contabilidade & Consultoria', // autorizado pelo Wesley em 27/11/2026 (sem CNPJ ainda)
   responsavel: '',       // nome do contador responsável
   crc: '',               // ex.: 'CRC-DF 000000/O-0'
   horario: ''
