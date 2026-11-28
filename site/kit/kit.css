@@ -165,3 +165,10 @@ body.com-teste { padding-bottom: 72px; }
 .kit .r-lista li small { display: block; color: var(--kit-mudo); font-size: 11px; }
 .kit .r-lista li.falha { background: #FFF6F6; }
 .kit .r-erro { color: #B42323; font-size: 13px; margin-top: 4px; }
+/* ditado por voz */
+.kit .rotulo-mic { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.kit .rotulo-mic label { margin-bottom: 0; }
+.kit .mic-btn { border: 1.5px solid #C9D3E0; background: #fff; color: inherit; border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 800; cursor: pointer; margin: 6px 0 4px; }
+.kit .mic-btn.ativo { background: #B42323; border-color: #B42323; color: #fff; animation: kit-mic 1.2s ease-in-out infinite; }
+.kit .mic-ouvindo { display: block; color: #B42323; font-size: 12px; margin: 2px 0 6px; }
+@keyframes kit-mic { 50% { opacity: .7; } }

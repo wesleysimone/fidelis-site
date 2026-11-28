@@ -144,10 +144,10 @@ window.KitSugestoes = (function () {
       ${trava ? `<div class="aviso-trava">🔒 Este ponto já foi <b>aprovado</b> na sugestão ${num(trava.id)} (${esc(trava.aprovada_por || '')}, ${dh(trava.aprovada_em)}). Uma nova mudança aqui fica marcada para o administrador autorizar.</div>` : ''}
       <label for="n-area">Área</label>
       <select id="n-area">${AREAS.map((a) => `<option ${(r.area || areaDaTela()) === a ? 'selected' : ''}>${a}</option>`).join('')}</select>
-      <label for="n-desc">O que você sugere?</label>
+      <div class="rotulo-mic"><label for="n-desc">O que você sugere?</label><button type="button" class="mic-btn" data-mic="n-desc">🎙️ Falar</button></div>
       <textarea id="n-desc" rows="4" maxlength="3000" placeholder="Ex.: trocar a foto do topo por uma da fachada">${esc(r.descricao || '')}</textarea>
       <div id="n-parecidas"></div>
-      <label for="n-obs">Observações (opcional)</label>
+      <div class="rotulo-mic"><label for="n-obs">Observações (opcional)</label><button type="button" class="mic-btn" data-mic="n-obs">🎙️ Falar</button></div>
       <textarea id="n-obs" rows="2" maxlength="3000" placeholder="Detalhes, exemplos, prioridade…">${esc(r.observacoes || '')}</textarea>
       <div class="a-row" style="justify-content:space-between;margin:4px 0 10px"><small class="a-muted" id="n-salvo">${r.descricao ? '✓ rascunho salvo' : ''}</small></div>
       <button class="btn btn-primary btn-block" id="n-salvar">Salvar sugestão</button>`;
@@ -168,9 +168,9 @@ window.KitSugestoes = (function () {
         ${s.aprovada_em ? `<dt>Aprovada</dt><dd>${dh(s.aprovada_em)} por ${esc(s.aprovada_por)} 🔒</dd>` : ''}
         ${s.afeta_aprovada ? `<dt>Atenção</dt><dd>⚠️ Mexe em algo já aprovado (${num(s.afeta_aprovada)}). Precisa de autorização do administrador.</dd>` : ''}
       </dl>
-      <label for="d-desc">Sugestão</label>
+      <div class="rotulo-mic"><label for="d-desc">Sugestão</label>${podeEditar ? '<button type="button" class="mic-btn" data-mic="d-desc">🎙️ Falar</button>' : ''}</div>
       ${podeEditar ? `<textarea id="d-desc" rows="4" maxlength="3000">${esc(s.descricao)}</textarea>` : `<p class="d-txt">${esc(s.descricao)}</p>`}
-      <label for="d-obs">Observações</label>
+      <div class="rotulo-mic"><label for="d-obs">Observações</label>${podeEditar ? '<button type="button" class="mic-btn" data-mic="d-obs">🎙️ Falar</button>' : ''}</div>
       ${podeEditar ? `<textarea id="d-obs" rows="2" maxlength="3000">${esc(s.observacoes)}</textarea>` : `<p class="d-txt">${esc(s.observacoes || '—')}</p>`}
       ${podeEditar ? `<small class="a-muted" id="d-salvo">Alterações salvas automaticamente</small>` : ''}
 
@@ -192,9 +192,56 @@ window.KitSugestoes = (function () {
       <ol class="d-hist">${s.historico.slice().reverse().map((h) => `<li><small>${dh(h.em)} · ${esc(h.por || '')}</small>${h.de ? `${esc(h.de)} → ` : ''}<b>${esc(h.para)}</b>${h.nota ? `<br><i>“${esc(h.nota)}”</i>` : ''}</li>`).join('')}</ol>`;
   }
 
+  // ---------- ditado por voz: fala e o texto aparece no campo (reconhecimento do próprio navegador, sem custo) ----------
+  const Reconhecer = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let ditando = null; // { rec, campo, botao, parar }
+  function pararDitado() { if (ditando) ditando.parar(); }
+  function ligarMic(p) {
+    $$('[data-mic]', p).forEach((b) => b.onclick = () => {
+      const campo = $('#' + b.dataset.mic, p);
+      if (ditando && ditando.botao === b) return pararDitado();
+      pararDitado();
+      if (!Reconhecer) { toast('Este navegador não faz ditado. No celular, use o 🎤 do teclado; no computador, use Chrome ou Edge.', 5000); return campo.focus(); }
+      const rec = new Reconhecer(); rec.lang = 'pt-BR'; rec.continuous = true; rec.interimResults = true;
+      const base = () => campo.value && !/\s$/.test(campo.value) ? ' ' : '';
+      let ativo = true, provisorio = $('.mic-ouvindo', b.parentNode) || null;
+      if (!provisorio) { provisorio = document.createElement('small'); provisorio.className = 'mic-ouvindo'; campo.insertAdjacentElement('afterend', provisorio); }
+      provisorio.textContent = '🔴 Ouvindo… fale normalmente. Toque em “Parar” quando terminar.';
+      b.classList.add('ativo'); b.textContent = '⏹ Parar';
+      rec.onresult = (e) => {
+        let parcial = '';
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const t = e.results[i][0].transcript.trim();
+          if (!t) continue;
+          if (e.results[i].isFinal) {
+            const frase = !campo.value.trim() || /[.!?]\s*$/.test(campo.value) ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+            campo.value = (campo.value + base() + frase).slice(0, campo.maxLength > 0 ? campo.maxLength : 3000);
+            campo.dispatchEvent(new Event('input', { bubbles: true }));
+          } else parcial += t + ' ';
+        }
+        provisorio.textContent = parcial ? '🔴 ' + parcial : '🔴 Ouvindo…';
+      };
+      rec.onerror = (e) => {
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { toast('Libere o microfone para este site (cadeado ao lado do endereço) e tente de novo.', 5000); ativo = false; }
+        else if (e.error === 'network') { toast('O ditado precisa de internet.', 4000); ativo = false; }
+        else if (e.error !== 'no-speech' && e.error !== 'aborted') Kit.registrar('erro', 'Ditado: ' + e.error);
+      };
+      rec.onend = () => { if (ativo) { try { rec.start(); } catch { fim(); } } else fim(); }; // o navegador para sozinho no silêncio: retoma
+      const fim = () => {
+        b.classList.remove('ativo'); b.textContent = '🎙️ Falar'; provisorio.remove();
+        if (ditando && ditando.rec === rec) { ditando = null; Kit.registrar('acao', 'Usou o ditado por voz'); }
+      };
+      ditando = { rec, campo, botao: b, parar: () => { ativo = false; try { rec.stop(); } catch { fim(); } } };
+      try { rec.start(); } catch { fim(); }
+      campo.focus();
+    });
+  }
+
   // ---------- eventos ----------
   function ligar(p) {
-    $('#c-x', p).onclick = fechar;
+    pararDitado();
+    ligarMic(p);
+    $('#c-x', p).onclick = () => { pararDitado(); fechar(); };
     $('#c-who', p).onclick = async () => { await KitEquipe.trocarNome(); desenhar(); };
     $$('[data-aba]', p).forEach((b) => b.onclick = () => { aba = b.dataset.aba; aberto = null; desenhar(); });
     $$('[data-abrir]', p).forEach((b) => b.onclick = () => { aberto = +b.dataset.abrir; desenhar(); $('.central-corpo', p).scrollTop = 0; });

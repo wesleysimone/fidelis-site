@@ -1,7 +1,7 @@
 /* Gerado por scripts/gerar-site.mjs — não editar à mão.
  * Rede primeiro, sem cache HTTP: com internet sempre mostra a versão mais nova (inclusive no app instalado);
  * sem internet usa a última cópia. Só guarda arquivos públicos do site (nenhum dado de cliente). */
-const VERSION = '0.3.2.mwzie6ft';
+const VERSION = '0.3.3.mx0k2c1f';
 const CACHE = 'fidelis-' + VERSION;
 const CORE = ['./', './estilo.css', './app.js', './dados.js', './manifest.webmanifest', './assets/simbolo-dourado.png', './assets/simbolo-dourado-160.png', './assets/icone-192.png'];
 

@@ -2,7 +2,7 @@
 window.KIT_CONFIG = {
   nome: 'FIDELIS Contabilidade & Consultoria',
   prefixo: 'fid',
-  versao: '0.3.2',
+  versao: '0.3.3',
   cor: '#081D30',
   responsavel: 'Wesley',
   adminLocal: 'wesley',
